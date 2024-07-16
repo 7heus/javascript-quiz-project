@@ -51,4 +51,18 @@ class Quiz {
       return false; // if number at current index is lower than amount of questions then not done
     else if (this.currentQuestionIndex == this.questions.length) return true; //if both numbers are the same, then has ended
   }
+  filterQuestionsByDifficulty(difficulty) {
+    if (difficulty > 3 || difficulty <= 0 || typeof difficulty !== "number")
+      return;
+    const rightDifficulty = this.questions.filter(
+      (question) => question.difficulty === difficulty
+    );
+    return (this.questions = rightDifficulty);
+  }
+
+  averageDifficulty() {
+    const diff = this.questions.reduce((acc, obj) => (acc += obj.difficulty), 0); // prettier-ignore
+
+    return diff / this.questions.length;
+  }
 }
