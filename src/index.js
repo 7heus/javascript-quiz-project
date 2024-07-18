@@ -65,8 +65,24 @@ document.addEventListener("DOMContentLoaded", () => {
   showQuestion();
 
   /************  TIMER  ************/
+  function timing() {
+    if (quiz.timeRemaining === 0) {
+      // conditional to check if there is no more time remaining
+      clearInterval(timer); //stopping the interval loop when timer is 0
+      showResults(); //showing end page
+    }
 
-  let timer;
+    //making a setInterval function with a variable assignment to make it easier to clear
+    quiz.timeRemaining--; // decreasing time remaining value
+    const minutes = Math.floor(quiz.timeRemaining / 60)
+      .toString()
+      .padStart(2, "0"); //this math was provided in the code at the top, just cut and pasted it down here
+    const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
+    timeRemainingContainer.innerText = `${minutes}:${seconds}`; //updating the time remaining text in page
+    //every second
+  }
+
+  let timer = setInterval(timing, 1000);
 
   /************  EVENT LISTENERS  ************/
 
@@ -137,21 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // map loop through every choice in question obj and creating the elements and setting all values inside loop
     });
-    let timer = setInterval(() => {
-      if (quiz.timeRemaining === 0) {
-        // conditional to check if there is no more time remaining
-        clearInterval(timer); //stopping the interval loop when timer is 0
-        showResults(); //showing end page
-      }
-      //making a setInterval function with a variable assignment to make it easier to clear
-      quiz.timeRemaining--; // decreasing time remaining value
-      const minutes = Math.floor(quiz.timeRemaining / 60)
-        .toString()
-        .padStart(2, "0"); //this math was provided in the code at the top, just cut and pasted it down here
-      const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
-      timeRemainingContainer.innerText = `${minutes}:${seconds}`; //updating the time remaining text in page
-      //every second
-    }, 1000 /*amount of miliseconds of delay for each loop*/);
   }
 
   function nextButtonHandler() {
@@ -189,6 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 2. Show the end view (div#endView)
     endView.style.display = "flex";
+    clearInterval(timer);
 
     // 3. Update the result container (div#result) inner text to show the number of correct answers out of total questions
     resultContainer.innerText = `You scored ${quiz.correctAnswers} out of ${quiz.questions.length} correct answers!`; //getting correct amount of questions that were answered correctly
